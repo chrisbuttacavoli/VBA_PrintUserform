@@ -22,6 +22,7 @@ Attribute VB_Exposed = False
 ' // Author: Chris Buttacavoli
 ' // Project: Printing ODOT calculations
 ' // Requirements provided by: Britney Buttacavoli
+' // Source code: https://github.com/chrisbuttacavoli/VBA_PrintUserform
 ' //
 ' // Description: This project was created to assist users in choosing which
 ' // sheets to print from an Excel workbook. Users can select and reorder
