@@ -22,7 +22,7 @@ Attribute VB_Exposed = False
 ' // Author: Chris Buttacavoli
 ' // Project: Printing ODOT calculations
 ' // Requirements provided by: Britney Buttacavoli
-' // Source code: https://github.com/chrisbuttacavoli/VBA_PrintUserform
+' // Source Code: https://github.com/chrisbuttacavoli/VBA_PrintUserform
 ' //
 ' // Description: This project was created to assist users in choosing which
 ' // sheets to print from an Excel workbook. Users can select and reorder
@@ -90,7 +90,8 @@ Private Sub cmdPrint_Click()
         Application.ScreenUpdating = True
         
         ' Rock 'n roll baby!
-        Worksheets(printList).PrintOut , Preview:=True
+        Application.Dialogs(xlDialogPrinterSetup).Show
+        Worksheets(printList).PrintOut , preview:=True
         
         ' Close the form
         Sheets("Table of Contents").Select
@@ -190,20 +191,3 @@ Private Function CanMove(direction As String) As Integer
 End Function
 
 
-' Spits out an array of all sheet names in this workbook
-Public Function GetWorksheetNames() As Variant
-    Dim allSheets() As String
-    Dim wks As Worksheet
-    Dim i As Integer
-    
-    ReDim allSheets(Worksheets.Count - 1)
-    i = 0
-    
-    ' Save all sheet names to an array
-    For Each wks In Worksheets
-        allSheets(i) = wks.Name
-        i = i + 1
-    Next
-    
-    GetWorksheetNames = allSheets()
-End Function
