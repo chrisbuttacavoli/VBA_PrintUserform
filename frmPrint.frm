@@ -31,6 +31,8 @@ Attribute VB_Exposed = False
 
 ' Set up choices
 Private Sub UserForm_Initialize()
+    On Error Resume Next
+    
     Dim sheetNames As Variant
     sheetNames = GetWorksheetNames
     
@@ -40,13 +42,12 @@ Private Sub UserForm_Initialize()
     cmdUp.Caption = ChrW(8593)
     cmdDown.Caption = ChrW(8595)
     
-    ' Add previously selected items
-    Dim rng As Range
-    Dim cell As Range
-    Set rng = Sheets("Table of Contents").Range("B6:B50")
-    For Each cell In rng
-        If cell.Value <> "" Then
-            lstSelected.AddItem cell.Value
+    'Remove the instructions sheet from the list of options
+    Dim i As Integer
+    For i = 0 To cbChoice.ListCount - 1
+        If cbChoice.List(i) = "Navigation" Then
+            cbChoice.RemoveItem i
+            Exit For
         End If
     Next
     
@@ -69,17 +70,26 @@ Private Sub cmdPrint_Click()
         Dim printList() As String
         
         ' First clear table of contents sheet
-        Sheets("Table of Contents").Range("B6:B50").ClearContents
+        Sheets("Table of Contents").Range("B7:B50").ClearContents
         
-        ' Dump all selected sheets into an array
+        ' Handle exceptions
+        Dim sheetsNotToPrint
+        ReDim sheetsNotToPrint(2)
+        sheetsNotToPrint(0) = "Instructions"
+        sheetsNotToPrint(1) = "Table of Contents"
+        sheetsNotToPrint(2) = "Title Sheet"
+        
+        ' We will dump all selected sheets into an array...
         ReDim printList(numSheets - 1)
-        Dim j As Integer
+        
+        Dim j As Integer ' Counts how many actually get put on the table contents
+        Dim z As Integer ' Loops through sheets not to print
         For i = 0 To UBound(printList)
             printList(i) = lstSelected.List(i)
             
-            ' Set items in Table of Contents sheet while we're here but do not include certain pages on it
-            If Not (lstSelected.List(i) = "Title Sheet" Or lstSelected.List(i) = "Table of Contents") Then
-                Sheets("Table of Contents").Range("B6").Offset(j, 0).Value = lstSelected.List(i)
+            ' Only print certain sheets onto the table of contents
+            If Not ExistsInArray(printList(i), sheetsNotToPrint) Then
+                Sheets("Table of Contents").Range("B7").Offset(j, 0).Value = lstSelected.List(i)
                 j = j + 1
             End If
         Next

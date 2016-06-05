@@ -157,3 +157,15 @@ Public Sub InsertSheet()
     ws.Range("A1").Select
 End Sub
 
+
+' Self explanatory
+Public Function ExistsInArray(val, arr) As Boolean
+    Dim i As Integer
+    ExistsInArray = False
+    For i = 0 To UBound(arr)
+        If val = arr(i) Then
+            ExistsInArray = True
+            Exit For
+        End If
+    Next
+End Function
